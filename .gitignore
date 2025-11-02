@@ -41,3 +41,8 @@ coverage/
 # Misc
 .env.test
 .env.local
+
+postman_collection.json
+.env.example
+.github
+scripts

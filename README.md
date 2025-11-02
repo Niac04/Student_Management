@@ -1,6 +1,6 @@
 Project Title: Student Management Web Application
 
- Project Description
+Project Description
 
 This project is a Student Management Web Application built with Node.js and Express.js.
 The goal is to create a simple and organized system that allows admins to manage student records using RESTful APIs.
@@ -8,8 +8,6 @@ The goal is to create a simple and organized system that allows admins to manage
 The application will handle operations like adding students, updating their information, retrieving their data, and deleting records. We plan to test all endpoints using Postman, since there won’t be a front-end for now.
 
 Later on, we may add more features like course management and authentication as we improve.
-
-
 
 Features (Planned)
 
@@ -27,9 +25,6 @@ Input validation and proper error handling
 
 Optional: Course management and basic admin authentication
 
-
-
-
 Tech Stack
 
 Backend: Node.js, Express.js
@@ -40,57 +35,51 @@ Testing: Postman
 
 Version Control: Git and GitHub
 
+API Endpoints (Sample)
 
+Method Endpoint Description
 
- API Endpoints (Sample)
-
-Method	Endpoint	            Description
-
-POST  	/api/students	           Add a new student
-GET	           /api/students	           Get all students
-GET	           /api/students/:id          Get one student
-PUT	           /api/students/:id          Update student info
-DELETE	/api/students/:id         Delete a student record
-
+POST /api/students Add a new student
+GET /api/students Get all students
+GET /api/students/:id Get one student
+PUT /api/students/:id Update student info
+DELETE /api/students/:id Delete a student record
 
 (Optional later)
 | POST | /api/courses | Add a course |
 | GET | /api/courses | Get all courses |
 | POST | /api/courses/:courseId/enroll/:studentId | Enroll student to a course |
 
-
 Project Structure (Planned)
 
 student-management-api/
 │
-├── app.js                  # Main entry point
+├── app.js # Main entry point
 ├── package.json
 │
 ├── config/
-│   └── db.js                  # Database setup (if we use MongoDB later)
+│ └── db.js # Database setup (if we use MongoDB later)
 │
 ├── controllers/
-│   ├── studentController.js
-│   └── courseController.js
+│ ├── studentController.js
+│ └── courseController.js
 │
 ├── routes/
-│   ├── studentRoutes.js
-│   └── courseRoutes.js
+│ ├── studentRoutes.js
+│ └── courseRoutes.js
 │
 ├── models/
-│   ├── studentModel.js
-│   └── courseModel.js
+│ ├── studentModel.js
+│ └── courseModel.js
 │
 ├── middleware/
-│   ├── errorHandler.js
-│   └── authMiddleware.js      # For authentication (optional)
+│ ├── errorHandler.js
+│ └── authMiddleware.js # For authentication (optional)
 │
 ├── utils/
-│   └── validateInput.js
+│ └── validateInput.js
 │
 └── README.md
-
-
 
 Why We’re Building It
 
@@ -104,9 +93,7 @@ To learn how to structure files and work as a team.
 
 To lay a foundation that can later connect to a frontend.
 
-
-
- Expected Outcome
+Expected Outcome
 
 A working REST API for managing student records.
 
@@ -115,3 +102,53 @@ Well-structured project with routes, controllers, and models.
 Documented endpoints on Postman.
 
 Team experience working on a real backend project.
+
+## Quick start (run locally)
+
+1. Copy `.env.example` to `.env` and fill values (MySQL must be reachable if using Sequelize):
+
+   - `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` should match your MySQL instance.
+
+2. Install dependencies:
+
+```powershell
+npm install
+```
+
+3. Start server (development):
+
+```powershell
+npm run dev
+# or
+node src/app.js
+```
+
+The app listens on `PORT` (default 5000) and will attempt to connect and `sequelize.sync()` on startup.
+
+## Testing with Postman
+
+- Import `postman_collection.json` from the repo root into Postman.
+- Set the collection/environment variable `baseUrl` to `http://localhost:5000`.
+- Use the Students and Courses folders to run the CRUD requests. After creating a resource copy the returned `id` into the `studentId` / `courseId` variable to test GET by id, PUT and DELETE.
+
+Example endpoints:
+
+- GET /students
+- POST /students { name, age, department, email }
+- GET /students/:id
+- PUT /students/:id
+- DELETE /students/:id
+
+## Notes & gotchas
+
+- This repo uses Sequelize (MySQL) by default. If you don't have MySQL available, I can convert the DB layer to MongoDB/Mongoose instead (ask me to switch).
+- `src/middleware/authMiddleware.js` implements a simple API-key check; set `API_KEY` in `.env` to enable it.
+- Email sending uses `nodemailer` and requires `EMAIL_USER`/`EMAIL_PASS` if you use those utilities.
+
+### Email notifications
+
+- The project includes a simple email helper at `src/utils/emailService.js`.
+- I updated the student controller to send emails (best-effort) when a student is created, updated, or deleted. Emails are only sent if `EMAIL_USER` and `EMAIL_PASS` are set in your `.env`.
+- The email behavior is "fire-and-forget" (errors are logged but do not block API responses). If you want retries or queueing, I can add a job queue (e.g., Bull) next.
+
+If you want, I can also add a Postman environment file or a short CI test suite next.

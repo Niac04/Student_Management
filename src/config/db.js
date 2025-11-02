@@ -13,16 +13,18 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   dialect: "mysql",
   logging: false,
 });
-console.log(DB_HOST, DB_NAME, DB_PASSWORD, DB_USER);
+// console.log(DB_HOST, DB_NAME, DB_PASSWORD, DB_USER);
 // console.log(sequelize)
 
 export const connectDB = async () => {
-  try {
+  try
+  {
     await sequelize.authenticate();
     // Ensure models/tables are created (safe for development). In production migrate instead.
     await sequelize.sync();
     console.log("✅ MySQL Database connected and models synced successfully");
-  } catch (error) {
+  } catch (error)
+  {
     console.error("Unable to connect to the database:", error);
     process.exit(1);
   }

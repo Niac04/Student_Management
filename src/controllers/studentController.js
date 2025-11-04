@@ -1,6 +1,8 @@
 import Student from "../models/studentModel.js";
+import logger from "../utils/logger.js";
+import { sendStudentRecordDestroy, sendStudentUpdateMail, sendStudentWelcomeMail } from "../utils/services/mailService.js";
 import { validateStudent } from "../utils/validateInput.js";
-import { sendEmail } from "../utils/emailService.js";
+
 
 export const getStudents = async (req, res, next) => {
   try
@@ -58,15 +60,13 @@ export const addStudent = async (req, res, next) => {
 
     const student = await Student.create(req.body);
     res.status(201).json({ success: true, data: student });
-    return;
 
     // Send welcome/notification email if email service configured
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS && student.email)
     {
-      const subject = `Welcome to Student Management, ${student.name}`;
-      const text = `Hi ${student.name},\n\nYou have been registered in the Student Management system.\n\nRegards,\nAdministration`;
-      // fire-and-forget; errors are handled inside sendEmail
-      sendEmail(student.email, subject, text);
+      sendStudentWelcomeMail(student).catch((err) => {
+        logger.error('sending welcome email failed:', err.message)
+      })
     }
   } catch (err)
   {
@@ -89,13 +89,12 @@ export const updateStudent = async (req, res, next) => {
 
     await student.update(req.body);
     res.json({ success: true, data: student });
-
     // Notify student about the update if email configured
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS && student.email)
     {
-      const subject = `Your student record was updated`;
-      const text = `Hi ${student.name},\n\nYour student record has been updated. If you did not request this change, contact admin.\n\nRegards,\nAdministration`;
-      sendEmail(student.email, subject, text);
+      sendStudentUpdateMail(student).catch((err) => {
+        logger.err('Error send update notification mail:', err.message);
+      })
     }
   } catch (err)
   {
@@ -123,9 +122,9 @@ export const deleteStudent = async (req, res, next) => {
     // Optionally notify student about deletion (best-effort)
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS && student.email)
     {
-      const subject = `Your student record was removed`;
-      const text = `Hi ${student.name},\n\nYour student record has been removed from the Student Management system. If this was unexpected, contact admin.\n\nRegards,\nAdministration`;
-      sendEmail(student.email, subject, text);
+      sendStudentRecordDestroy(student).catch((err) => {
+        logger.error('Error sending removal mail:', err.message)
+      })
     }
   } catch (err)
   {

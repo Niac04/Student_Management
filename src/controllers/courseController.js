@@ -5,7 +5,13 @@ export const getCourses = async (req, res, next) => {
   try
   {
     const courses = await Course.findAll();
-    res.json({ success: true, data: courses });
+    if (!courses)
+    {
+      res.status(404).json({ success: false, message: "No course found!" })
+      return;
+    }
+    res.status(200).json({ success: true, data: courses });
+    return;
   } catch (err)
   {
     next(err);
@@ -21,7 +27,7 @@ export const getCourse = async (req, res, next) => {
       return res
         .status(404)
         .json({ success: false, message: "Course not found" });
-    res.json({ success: true, data: course });
+    res.status(200).json({ success: true, data: course });
     return;
   } catch (err)
   {

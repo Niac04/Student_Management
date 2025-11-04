@@ -2,16 +2,19 @@ import Course from "../models/courseModel.js";
 import { validateCourse } from "../utils/validateInput.js";
 
 export const getCourses = async (req, res, next) => {
-  try {
+  try
+  {
     const courses = await Course.findAll();
     res.json({ success: true, data: courses });
-  } catch (err) {
+  } catch (err)
+  {
     next(err);
   }
 };
 
 export const getCourse = async (req, res, next) => {
-  try {
+  try
+  {
     const { id } = req.params;
     const course = await Course.findByPk(id);
     if (!course)
@@ -19,13 +22,16 @@ export const getCourse = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Course not found" });
     res.json({ success: true, data: course });
-  } catch (err) {
+    return;
+  } catch (err)
+  {
     next(err);
   }
 };
 
 export const addCourse = async (req, res, next) => {
-  try {
+  try
+  {
     const { valid, errors } = validateCourse(req.body);
     if (!valid) return res.status(400).json({ success: false, errors });
 
@@ -37,13 +43,16 @@ export const addCourse = async (req, res, next) => {
 
     const course = await Course.create(req.body);
     res.status(201).json({ success: true, data: course });
-  } catch (err) {
+    return;
+  } catch (err)
+  {
     next(err);
   }
 };
 
 export const updateCourse = async (req, res, next) => {
-  try {
+  try
+  {
     const { id } = req.params;
     const { valid, errors } = validateCourse(req.body, { partial: true });
     if (!valid) return res.status(400).json({ success: false, errors });
@@ -56,13 +65,16 @@ export const updateCourse = async (req, res, next) => {
 
     await course.update(req.body);
     res.json({ success: true, data: course });
-  } catch (err) {
+    return;
+  } catch (err)
+  {
     next(err);
   }
 };
 
 export const deleteCourse = async (req, res, next) => {
-  try {
+  try
+  {
     const { id } = req.params;
     const course = await Course.findByPk(id);
     if (!course)
@@ -72,7 +84,9 @@ export const deleteCourse = async (req, res, next) => {
 
     await course.destroy();
     res.json({ success: true, message: "Course deleted" });
-  } catch (err) {
+    return;
+  } catch (err)
+  {
     next(err);
   }
 };

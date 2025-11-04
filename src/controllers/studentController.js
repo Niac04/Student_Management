@@ -12,6 +12,7 @@ export const getStudents = async (req, res, next) => {
       return;
     }
     res.status(200).json({ success: true, data: students });
+    return;
   } catch (err)
   {
     next(err);
@@ -57,6 +58,7 @@ export const addStudent = async (req, res, next) => {
 
     const student = await Student.create(req.body);
     res.status(201).json({ success: true, data: student });
+    return;
 
     // Send welcome/notification email if email service configured
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS && student.email)

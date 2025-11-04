@@ -24,7 +24,7 @@ export const connectDB = async () => {
     await sequelize.authenticate();
     // Ensure models/tables are created (safe for development). In production migrate instead.
     await sequelize.sync();
-    logger.info("✅ MySQL Database connected and models synced successfully");
+    logger.info("MySQL Database connected and models synced successfully");
   } catch (error)
   {
     logger.error("Unable to connect to the database:", error);

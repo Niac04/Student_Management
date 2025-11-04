@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Home route
 app.get("/", (req, res) => {
-  res.send("🎓 Student Management API is running...");
+  res.send("Student Management API is running...");
 });
 
 // Routes
@@ -31,7 +31,7 @@ const startServer = async () => {
   try
   {
     await connectDB();
-    app.listen(PORT, () => logger.info(`✅ Server running on port ${PORT}`));
+    app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
 
 
   } catch (err)

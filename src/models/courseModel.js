@@ -1,8 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/db.js";
 
-
-
 class Course extends Model { }
 Course.init(
   {

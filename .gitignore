@@ -46,3 +46,4 @@ postman_collection.json
 .env.example
 .github
 scripts
+logs
